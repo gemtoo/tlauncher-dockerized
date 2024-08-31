@@ -1,0 +1,26 @@
+services:
+  minecraft-client:
+    container_name: minecraft-client
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host
+    volumes:
+      - ./gamedata/java:/home/user/.java
+      - ./gamedata/minecraft:/home/user/.minecraft
+      - ./gamedata/tlauncher:/home/user/.tlauncher
+      - type: bind
+        source: ${HOME}/.Xauthority
+        target: ${HOME}/.Xauthority
+      - type: bind
+        source: /tmp/.X11-unix
+        target: /tmp/.X11-unix
+      - /dev/shm:/dev/shm
+      - /dev/dri:/dev/dri
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native
+      - ${HOME}/.config/pulse/cookie:${HOME}/.config/pulse/cookie
+    environment:
+      - DISPLAY=${DISPLAY}
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+      - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
